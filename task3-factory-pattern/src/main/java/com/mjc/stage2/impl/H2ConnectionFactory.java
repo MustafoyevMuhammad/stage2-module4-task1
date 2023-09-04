@@ -17,6 +17,8 @@ public class H2ConnectionFactory implements ConnectionFactory {
         try {
             properties.load(new FileInputStream("h2database.properties"));
             return DriverManager.getConnection(properties.getProperty("db_url"), properties);
+        } catch (FileNotFoundException e){
+            throw new RuntimeException(e);
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
