@@ -1,7 +1,6 @@
 package com.mjc.stage2;
 
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import lombok.ToString;
 
 @EqualsAndHashCode
@@ -94,7 +93,7 @@ public class Employee {
             return this;
         }
         public EmployeeBuilder setCardNumber(String cardNumber){
-            employee.setEmail(cardNumber);
+            employee.setCarNumber(cardNumber);
             return this;
         }
 
