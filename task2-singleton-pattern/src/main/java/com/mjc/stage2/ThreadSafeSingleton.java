@@ -10,7 +10,7 @@ public class ThreadSafeSingleton {
     }
 
 
-    public static ThreadSafeSingleton getInstance() {
+    public static synchronized ThreadSafeSingleton getInstance() {
         ThreadSafeSingleton result = instance.get();
         if (result == null) {
             result = new ThreadSafeSingleton();
