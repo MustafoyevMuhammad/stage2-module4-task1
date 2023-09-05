@@ -1,20 +1,25 @@
 package com.mjc.stage2;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public class ThreadSafeSingleton {
     // Write your code here!
-    private static volatile ThreadSafeSingleton insteace;
+    private static final AtomicReference<ThreadSafeSingleton> instance = new AtomicReference<>();
 
     private ThreadSafeSingleton() {
     }
 
+
     public static ThreadSafeSingleton getInstance() {
-        if (insteace == null) {
-            synchronized (ThreadSafeSingleton.class) {
-                if (insteace == null) {
-                    insteace = new ThreadSafeSingleton();
-                }
+        ThreadSafeSingleton result = instance.get();
+        if (result == null) {
+            result = new ThreadSafeSingleton();
+            if (instance.compareAndSet(null, result)) {
+            } else {
+                result = instance.get();
             }
         }
-        return insteace;
+        return result;
+
     }
 }
