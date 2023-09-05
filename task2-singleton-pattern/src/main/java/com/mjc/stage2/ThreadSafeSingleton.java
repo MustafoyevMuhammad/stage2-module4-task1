@@ -1,25 +1,24 @@
 package com.mjc.stage2;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ThreadSafeSingleton {
     // Write your code here!
-    private static final AtomicReference<ThreadSafeSingleton> instance = new AtomicReference<>();
+    private static AtomicReference<ThreadSafeSingleton> instance = new AtomicReference<>();
+    private static final ReentrantLock lock = new ReentrantLock();
 
     private ThreadSafeSingleton() {
     }
 
-
-    public static synchronized ThreadSafeSingleton getInstance() {
-        ThreadSafeSingleton result = instance.get();
-        if (result == null) {
-            result = new ThreadSafeSingleton();
-            if (instance.compareAndSet(null, result)) {
-            } else {
-                result = instance.get();
-            }
+    public static ThreadSafeSingleton getInstance() {
+        lock.lock();
+        if (instance == null || instance.get() == null){
+            instance = new AtomicReference<>(new ThreadSafeSingleton());
         }
-        return result;
-
+        var result = instance.get();
+        lock.unlock();
+            return result;
     }
+
 }

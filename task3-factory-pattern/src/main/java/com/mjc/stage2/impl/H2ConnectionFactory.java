@@ -1,28 +1,29 @@
 package com.mjc.stage2.impl;
 
 import com.mjc.stage2.ConnectionFactory;
+import com.mjc.stage2.impl.loader.H2DatabasePropertiesLoader;
+import com.mjc.stage2.impl.loader.PropertiesLoader;
+import lombok.SneakyThrows;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 
+
+@SuppressWarnings("unused")
 public class H2ConnectionFactory implements ConnectionFactory {
+    private static final PropertiesLoader propertiesLoader = H2DatabasePropertiesLoader.getInstance();
+
+    private static class PropertyKey{
+        private static final String URL = "db_url";
+        private static final String USER = "user";
+        private static final String PASSWORD = "password";
+    }
+    @SneakyThrows
     @Override
     public Connection createConnection() {
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream("h2database.properties"));
-            return DriverManager.getConnection(properties.getProperty("db_url"), properties);
-        } catch (FileNotFoundException e){
-            throw new RuntimeException(e);
-        } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
-        }
+            return DriverManager.getConnection(propertiesLoader.getByKey(PropertyKey.URL),
+                    propertiesLoader.getByKey(PropertyKey.USER),
+                    propertiesLoader.getByKey(PropertyKey.PASSWORD));
     }
-    // Write your code here!
 }
 
